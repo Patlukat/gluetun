@@ -46,6 +46,8 @@ func Test_runTest(t *testing.T) {
 		require.NoError(t, err)
 	})
 
+	const tempSafetyMargin = 200
+
 	testCases := map[string]struct {
 		timeout time.Duration
 		dst     func(t *testing.T) netip.AddrPort
@@ -74,7 +76,7 @@ func Test_runTest(t *testing.T) {
 			dst: func(_ *testing.T) netip.AddrPort {
 				return netip.AddrPortFrom(netip.AddrFrom4([4]byte{1, 1, 1, 1}), 443)
 			},
-			mtu:     defaultIPv4MTU,
+			mtu:     defaultIPv4MTU - tempSafetyMargin,
 			success: true,
 		},
 		"1.1.1.1:80": {
@@ -82,7 +84,7 @@ func Test_runTest(t *testing.T) {
 			dst: func(_ *testing.T) netip.AddrPort {
 				return netip.AddrPortFrom(netip.AddrFrom4([4]byte{1, 1, 1, 1}), 80)
 			},
-			mtu:     defaultIPv4MTU,
+			mtu:     defaultIPv4MTU - tempSafetyMargin,
 			success: true,
 		},
 		"8.8.8.8:443": {
@@ -90,7 +92,7 @@ func Test_runTest(t *testing.T) {
 			dst: func(_ *testing.T) netip.AddrPort {
 				return netip.AddrPortFrom(netip.AddrFrom4([4]byte{8, 8, 8, 8}), 443)
 			},
-			mtu:     defaultIPv4MTU,
+			mtu:     defaultIPv4MTU - tempSafetyMargin,
 			success: true,
 		},
 	}
